@@ -140,11 +140,56 @@ export default function AccountsReceivable() {
     ],
   ]);
 
-  const tableData: TableRow[] = [
+  // const tableData: TableRow[] = [
+  //   {
+  //     id: "1",
+  //     cliente:
+  //       "15 - SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
+  //     emp: "2",
+  //     pedido: "752",
+  //     nota: "567",
+  //     parc: "10",
+  //     vencimento: "04/11/2022",
+  //     valor: "R$ 238,92",
+  //     dias: "5",
+  //     multa: "R$ 11,95",
+  //     juros: "R$ 4,78",
+  //     valorTotal: "R$ 522,10",
+  //   },
+  //   {
+  //     id: "2",
+  //     cliente:
+  //       "15- SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
+  //     emp: "2",
+  //     pedido: "752",
+  //     nota: "567",
+  //     parc: "10",
+  //     vencimento: "04/14/2022",
+  //     valor: "R$ 238,92",
+  //     dias: "8",
+  //     multa: "R$ 19,11",
+  //     juros: "R$ 7,64",
+  //     valorTotal: "R$ 522,10",
+  //   },
+  //   {
+  //     id: "3",
+  //     cliente: "1652 - WEB PALMAS PAPELARIA E INFORMATICA - 10.552.934/0001-90",
+  //     emp: "2",
+  //     pedido: "752",
+  //     nota: "567",
+  //     parc: "10",
+  //     vencimento: "31/10/2020",
+  //     valor: "R$ 1.500,00",
+  //     dias: "15",
+  //     multa: "R$ 75,00",
+  //     juros: "R$ 30,00",
+  //     valorTotal: "R$ 1.650,00",
+  //   },
+  // ];
+  const mockAbertas: TableRow[] = [
     {
       id: "1",
-      cliente:
-        "15 - SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
+      cliente: "15 - SOLUGAO TI ASSISTENCIA...",
       emp: "2",
       pedido: "752",
       nota: "567",
@@ -157,23 +202,8 @@ export default function AccountsReceivable() {
       valorTotal: "R$ 522,10",
     },
     {
-      id: "2",
-      cliente:
-        "15- SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
-      emp: "2",
-      pedido: "752",
-      nota: "567",
-      parc: "10",
-      vencimento: "04/14/2022",
-      valor: "R$ 238,92",
-      dias: "8",
-      multa: "R$ 19,11",
-      juros: "R$ 7,64",
-      valorTotal: "R$ 522,10",
-    },
-    {
       id: "3",
-      cliente: "1652 - WEB PALMAS PAPELARIA E INFORMATICA - 10.552.934/0001-90",
+      cliente: "1652 - WEB PALMAS PAPELARIA...",
       emp: "2",
       pedido: "752",
       nota: "567",
@@ -187,8 +217,83 @@ export default function AccountsReceivable() {
     },
   ];
 
+  const mockBaixadas: TableRow[] = [
+    {
+      id: "10",
+      cliente: "564 - MERCADINHO POPULAR",
+      emp: "3",
+      pedido: "3321",
+      nota: "883",
+      parc: "03",
+      vencimento: "10/02/2024",
+      valor: "R$ 820,00",
+      dias: "0",
+      multa: "R$ 0,00",
+      juros: "R$ 0,00",
+      valorTotal: "R$ 820,00",
+      status: "baixada",
+    },
+    {
+      id: "11",
+      cliente: "98 - BARATÃO SUPERMERCADO",
+      emp: "1",
+      pedido: "4412",
+      nota: "982",
+      parc: "02",
+      vencimento: "03/02/2024",
+      valor: "R$ 452,00",
+      dias: "0",
+      multa: "R$ 0,00",
+      juros: "0,00",
+      valorTotal: "R$ 452,00",
+      status: "baixada",
+    },
+  ];
+
+  const mockCanceladas: TableRow[] = [
+    {
+      id: "20",
+      cliente: "87 - PEDRO DISTRIBUIDORA",
+      emp: "9",
+      pedido: "7782",
+      nota: "8821",
+      parc: "01",
+      vencimento: "20/11/2023",
+      valor: "R$ 199,00",
+      dias: "—",
+      multa: "—",
+      juros: "—",
+      valorTotal: "R$ 199,00",
+      status: "cancelada",
+    },
+  ];
+
+  const [situacao, setSituacao] = useState("abertas");
+  const [tableData, setTableData] = useState<TableRow[]>(mockAbertas);
+
   const handleRowSelect = (selectedRows: string[]) => {
     console.log("Linhas selecionadas:", selectedRows);
+  };
+  const handleFilterChange = (newFilters: FilterField[][]) => {
+    setFilters(newFilters);
+
+    const novaSituacao = newFilters[2][1]?.value || "abertas";
+
+    setSituacao(novaSituacao);
+
+    switch (novaSituacao) {
+      case "baixadas":
+        setTableData(mockBaixadas);
+        break;
+      case "canceladas":
+        setTableData(mockCanceladas);
+        break;
+      case "todos":
+        setTableData([...mockAbertas, ...mockBaixadas, ...mockCanceladas]);
+        break;
+      default:
+        setTableData(mockAbertas);
+    }
   };
 
   // Função quando clica em "Incluir" no Header
@@ -248,7 +353,7 @@ export default function AccountsReceivable() {
       {/* Passa a função para abrir o modal para o Header */}
       <Header onIncluirClick={handleOpenIncludeModal} />
 
-      <DataFilter filters={filters} onFilterChange={setFilters} />
+      <DataFilter filters={filters} onFilterChange={handleFilterChange} />
 
       <main className="max-w-full mx-auto py-8">
         <div className="space-y-6">

@@ -230,7 +230,7 @@ const ModalGenerateInstallments: React.FC<ModalGenerateInstallmentsProps> = ({
           {/* SEÇÃO SUPERIOR: Empresa e Cliente */}
           <div className="mt-[13px] space-y-4 mb-6">
             {/* Empresa */}
-            <div className="h-[32px] md:h-[48px]">
+            <div className="h-[32px] md:h-[48px] mt-0 md:mt-[30px]">
               {" "}
               {/* Altura: 32px mobile, 48px desktop */}
               <label className="block text-sm font-medium text-[color:var(--orange-primary)] mb-1">
@@ -260,7 +260,14 @@ const ModalGenerateInstallments: React.FC<ModalGenerateInstallmentsProps> = ({
             </div>
 
             {/* Cliente */}
-            <div className="h-[32px] md:h-[48px] mt-[10px]">
+            <div
+              className="  h-[32px]
+  md:h-[48px]
+  mt-0
+  md:mt-[-10px]
+
+"
+            >
               {" "}
               <label className="block text-sm font-medium text-[color:var(--orange-primary)] mb-1">
                 Cliente
@@ -299,6 +306,8 @@ const ModalGenerateInstallments: React.FC<ModalGenerateInstallmentsProps> = ({
   w-full
   md:w-[786px]
   mx-auto
+  mt-0
+  md:mt-[-10px]
 "
             >
               {/* Tipo */}
@@ -357,8 +366,8 @@ bg-white dark:bg-slate-700
 text-gray-900 dark:text-gray-100
 focus:outline-none
 focus:ring-2 focus:ring-[color:var(--orange-primary)]
-md:h-12              /* 48px de altura (12 * 4px) */
-sm:mt-[-5px]       /* Margin top -5px apenas no desktop */
+md:h-12
+sm:mt-[-5px]
 "
                 />
               </div>
@@ -427,58 +436,80 @@ sm:mt-[-5px]       /* Margin top -5px apenas no desktop */
             </div>
 
             {/* LINHA 2: ESPÉCIE */}
-            <div className="grid grid-cols-5 gap-2 mb-6 items-start">
-              <div className="col-span-1 h-[40px] md:h-[48px]">
+            <div
+              className="
+    grid grid-cols-4
+    gap-[10px]
+    w-full
+    md:w-[786px]
+    mx-auto
+    mt-0
+    md:mt-[-10px]
+  "
+            >
+              {/* Espécie */}
+              <div className="flex flex-col md:h-[48px]">
                 <label
-                  className="block
-  text-[12px]
-  md:text-[14px]
-  font-medium
-  text-[color:var(--orange-primary)]
-  mb-1
-  md:mb-[6px]
-  md:h-[20px]
-  md:leading-[20px]"
+                  className="
+        text-[12px] md:text-[14px]
+        font-medium text-[color:var(--orange-primary)]
+        mb-[4px]
+      "
                 >
                   Espécie
                 </label>
-              </div>
-              <div className="col-span-4 h-[40px] md:h-[48px]">
-                <div className="relative">
-                  <select
-                    value={formData.especie}
-                    onChange={(e) =>
-                      handleInputChange("especie", e.target.value)
-                    }
-                    className="w-full h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent appearance-none"
-                  >
-                    {ESPECIE_OPTIONS.map((especie) => (
-                      <option key={especie} value={especie}>
-                        {especie}
-                      </option>
-                    ))}
-                  </select>
-                  <SquareArrowDown
-                    size={16}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[color:var(--orange-primary)] pointer-events-none"
-                  />
-                </div>
+
+                <select
+                  value={formData.especie}
+                  onChange={(e) => handleInputChange("especie", e.target.value)}
+                  className="
+        w-[189px] h-[28px]
+        px-3 pr-8 text-sm
+        border border-gray-300 dark:border-slate-600
+        rounded
+        bg-white dark:bg-slate-700
+        text-gray-900 dark:text-gray-100
+        focus:outline-none
+        focus:ring-2 focus:ring-[color:var(--orange-primary)]
+        md:h-12
+        sm:mt-[-5px]
+        appearance-none
+      "
+                >
+                  {ESPECIE_OPTIONS.map((especie) => (
+                    <option key={especie} value={especie}>
+                      {especie}
+                    </option>
+                  ))}
+                </select>
+
+                <SquareArrowDown
+                  size={16}
+                  className="
+        absolute right-2 top-1/2
+        transform -translate-y-1/2
+        text-[color:var(--orange-primary)]
+        pointer-events-none
+      "
+                />
               </div>
             </div>
 
             {/* LINHA 3: PORTADOR + BOTÃO */}
             <div className="grid grid-cols-5 gap-2 mb-6 items-start">
-              <div className="col-span-1 h-[40px] md:h-[48px]">
+              <div className="col-span-1 h-[40px] md:h-[48px] md:mt-[10px]">
                 <label
-                  className="block
-  text-[12px]
-  md:text-[14px]
-  font-medium
-  text-[color:var(--orange-primary)]
-  mb-1
-  md:mb-[6px]
-  md:h-[20px]
-  md:leading-[20px]"
+                  className="
+      block
+      text-[12px]
+      md:text-[14px]
+      font-medium
+      text-[color:var(--orange-primary)]
+      mb-1
+      md:mb-[6px]
+      md:h-[20px]
+      md:leading-[20px]
+    "
                 >
                   Portador
                 </label>
@@ -491,7 +522,7 @@ sm:mt-[-5px]       /* Margin top -5px apenas no desktop */
                     onChange={(e) =>
                       handleInputChange("portador", e.target.value)
                     }
-                    className="w-full h-[28px] px-3 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
+                    className="w-[189px] h-[28px] px-3 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
                     placeholder="Nome do portador"
                   />
                 </div>
@@ -547,7 +578,7 @@ sm:mt-[-5px]       /* Margin top -5px apenas no desktop */
                       onChange={(e) =>
                         handleInputChange("prazo", e.target.value)
                       }
-                      className="w-full h-[28px] px-3 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
+                      className="w-[189px] h-[28px] px-3 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
                       placeholder="Dias entre parcelas"
                     />
                   </div>
@@ -561,15 +592,6 @@ sm:mt-[-5px]       /* Margin top -5px apenas no desktop */
 
           {/* SEÇÃO INFERIOR: Tabela de Parcelas */}
           <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <div className="text-sm font-medium text-[color:var(--orange-primary)]">
-                Parcelas Geradas
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                {localParcelas.length} parcelas • Total: R$ {calcularTotal()}
-              </div>
-            </div>
-
             {localParcelas.length > 0 ? (
               <div className="border border-gray-300 dark:border-slate-600 rounded-lg overflow-hidden">
                 {/* Cabeçalho da tabela */}

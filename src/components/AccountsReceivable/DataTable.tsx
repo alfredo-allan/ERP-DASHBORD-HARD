@@ -21,6 +21,7 @@ export interface TableRow {
   multa: string;
   juros: string;
   valorTotal: string;
+  status?: "aberta" | "baixada" | "cancelada";
 }
 
 export interface DataTableProps {
@@ -181,9 +182,9 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
             </tr>
 
             {/* Segunda linha - Cabeçalhos das colunas */}
-            <tr className="border-b border-gray-300 dark:border-slate-600 bg-[var(--orange-primary)] h-[24px]">
+            <tr className="border-b border-gray-300 dark:border-slate-600 bg-[var(--orange-primary)]">
               {/* Checkbox seleção */}
-              <th className="w-8 px-1 py-2 border-r border-gray-300 dark:border-slate-600">
+              <th className="w-8 px-1 py-0 h-[24px] border-r border-gray-300 dark:border-slate-600">
                 <input
                   type="checkbox"
                   checked={
@@ -198,11 +199,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
               {columns.map((column, index) => (
                 <th
                   key={column.key}
-                  className={`px-1 py-2 text-xs font-bold text-white border-r border-gray-300 dark:border-slate-600 ${
-                    column.width
-                  } ${column.align} ${
-                    index === columns.length - 1 ? "" : "border-r"
-                  }`}
+                  className={`px-1 py-0 h-[24px]
+ text-xs font-bold text-white border-r border-gray-300 dark:border-slate-600 ${
+   column.width
+ } ${column.align} ${index === columns.length - 1 ? "" : "border-r"}`}
                 >
                   {column.label}
                 </th>
@@ -214,11 +214,17 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
             {data.map((row) => (
               <tr
                 key={row.id}
-                className={`border-b border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 ${
-                  selectedRows.includes(row.id)
-                    ? "bg-orange-50 dark:bg-orange-900/20"
-                    : ""
-                }`}
+                className={`
+    border-b border-gray-300 dark:border-slate-600
+
+    hover:bg-[#FAE0CC]
+
+    ${row.status === "baixada" ? "text-[#008A45]" : ""}
+${row.status === "cancelada" ? "text-[#0047CC]" : ""}
+
+
+    ${selectedRows.includes(row.id) ? "bg-orange-50 dark:bg-orange-900/20" : ""}
+  `}
               >
                 {/* Checkbox */}
                 <td className="px-1 py-1 border-r border-gray-300 dark:border-slate-600">
@@ -232,7 +238,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
 
                 {/* Cliente com formatação especial */}
                 <td className="px-2 py-1 border-r border-gray-300 dark:border-slate-600 font-medium">
-                  <div className="text-xs text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                  <div className="text-xs whitespace-nowrap">
                     {row.cliente}
                   </div>
                 </td>
@@ -241,7 +247,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
                 {columns.slice(1).map((column) => (
                   <td
                     key={`${row.id}-${column.key}`}
-                    className={`px-1 py-1 text-xs text-gray-800 dark:text-gray-200 ${
+                    className={`px-1 py-1 text-xs ${
                       column.align
                     } border-r border-gray-300 dark:border-slate-600 ${
                       column.isBold ? "font-bold" : ""

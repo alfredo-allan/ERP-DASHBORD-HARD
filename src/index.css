@@ -238,6 +238,20 @@ body {
   }
 }
 
+@layer components {
+  .mega-menu-dropdown {
+    @apply fixed left-0 right-0 w-screen bg-white dark:bg-slate-800 shadow-lg z-50 border-t-2 border-b-2;
+
+    /* Desktop - altura adaptável com max-height */
+    @apply lg:overflow-y-auto lg:min-h-[200px] lg:max-h-[60vh];
+
+    /* Tablet/Mobile - altura fixa com scroll */
+    @apply max-lg:overflow-y-auto max-lg:h-[calc(100vh-4rem)];
+
+    /* Ajuste de top para altura do header */
+    top: 4rem; /* 64px padrão - ajuste conforme seu header */
+  }
+}
 .radix-popper-fix {
   position: fixed !important;
   left: 0 !important;

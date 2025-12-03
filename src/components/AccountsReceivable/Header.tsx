@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useTheme } from "../../hooks/useTheme";
+import NavBar from "../Navbar";
+import { useNavigation } from "../../hooks/useNavigation";
 import {
   Search,
   Bell,
@@ -43,13 +45,22 @@ interface ActionButton {
 
 // Props do componente Header
 interface HeaderProps {
-  onIncluirClick?: () => void; // Prop para receber a função do modal
+  onIncluirClick?: () => void;
   onAlterarClick?: () => void;
   onCancelaClick?: () => void;
   onBaixaClick?: () => void;
   onImprimirClick?: () => void;
   onEnviarClick?: () => void;
 }
+
+// Mapeamento de cores para cada label
+const labelColors: Record<string, string> = {
+  Cadastros: "#008A45",
+  Comercial: "#0047CC",
+  Financeiro: "#E66400",
+  Fiscal: "#8300E6",
+  Relatórios: "#0096B8",
+};
 
 const Header: React.FC<HeaderProps> = ({
   onIncluirClick,
@@ -62,6 +73,8 @@ const Header: React.FC<HeaderProps> = ({
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [mobileActionsOpen, setMobileActionsOpen] = useState<boolean>(false);
+  const [mobileMegaMenu, setMobileMegaMenu] = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   const navigationItems: NavigationItem[] = [
     {
@@ -91,7 +104,6 @@ const Header: React.FC<HeaderProps> = ({
     },
   ];
 
-  // Action buttons com callbacks das props
   const actionButtons: ActionButton[] = [
     {
       icon: Plus,
@@ -125,19 +137,36 @@ const Header: React.FC<HeaderProps> = ({
     },
   ];
 
-  // Handlers para melhor organização
   const handleMobileMenuToggle = (): void => {
     setMobileMenuOpen(!mobileMenuOpen);
+    // Fechar mega menu se estiver aberto
+    if (mobileMegaMenu) setMobileMegaMenu(null);
   };
 
   const handleMobileActionsToggle = (): void => {
     setMobileActionsOpen(!mobileActionsOpen);
   };
 
-  // Função padrão para botões sem callback
   const defaultClickHandler = (label: string) => {
     console.log(`Botão ${label} clicado - Função não implementada`);
-    // Você pode adicionar um toast ou alerta aqui se quiser
+  };
+
+  const handleNavClick = (label: string) => {
+    setOpenMenu((prev) => (prev === label ? null : label));
+  };
+
+  // Handler para abrir mega menu no mobile
+  const handleMobileMegaMenu = (label: string) => {
+    setMobileMegaMenu(mobileMegaMenu === label ? null : label);
+    // Fechar menu mobile simples
+    setMobileMenuOpen(false);
+  };
+
+  // Fechar todos os menus
+  const closeAllMenus = () => {
+    setMobileMegaMenu(null);
+    setOpenMenu(null);
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -162,19 +191,13 @@ const Header: React.FC<HeaderProps> = ({
                 />
               </div>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden lg:flex items-center space-x-1">
-                {navigationItems.map((item, index) => (
-                  <button key={`nav-${index}`} className="btn-ghost">
-                    <item.icon
-                      size={27}
-                      className={`w-[27px] h-[27px] min-w-[27px] min-h-[27px] ${item.iconColor}`}
-                      strokeWidth={2}
-                    />
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </nav>
+              {/* Desktop Navigation usando NavBar */}
+              <div className="flex-1">
+                <NavBar
+                  items={navigationItems}
+                  onItemClick={(item) => handleNavClick(item.label)}
+                />
+              </div>
             </div>
 
             {/* Right Section: Search + Icons */}
@@ -191,7 +214,6 @@ const Header: React.FC<HeaderProps> = ({
 
               {/* Icons - Responsivo */}
               <div className="flex items-center space-x-1 sm:space-x-3">
-                {/* Ícones que ficam HIDDEN no mobile */}
                 <button className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors hidden sm:flex">
                   <Bell
                     size={25}
@@ -321,6 +343,7 @@ const Header: React.FC<HeaderProps> = ({
             {navigationItems.map((item, index) => (
               <button
                 key={`mobile-nav-${index}`}
+                onClick={() => handleMobileMegaMenu(item.label)}
                 className="flex items-center space-x-3 w-full px-4 py-3 bg-white dark:bg-slate-800 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-all border border-gray-200 dark:border-slate-600"
               >
                 <item.icon
@@ -334,6 +357,103 @@ const Header: React.FC<HeaderProps> = ({
               </button>
             ))}
           </nav>
+        </div>
+      )}
+
+      {/* Mega Menu para Mobile/Tablet */}
+      {mobileMegaMenu && (
+        <div className="lg:hidden fixed inset-0 z-[60]">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={closeAllMenus}
+          />
+
+          {/* Mega Menu Container */}
+          <div
+            className="absolute top-0 left-0 right-0 h-full overflow-y-auto"
+            style={{ backgroundColor: labelColors[mobileMegaMenu] }}
+          >
+            {/* Header do Mega Menu Mobile */}
+            <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/20 bg-black/10 backdrop-blur-sm">
+              <h2 className="text-xl font-bold text-white">{mobileMegaMenu}</h2>
+              <button
+                onClick={closeAllMenus}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                aria-label="Fechar menu"
+              >
+                <X size={24} className="text-white" />
+              </button>
+            </div>
+
+            {/* Conteúdo do Mega Menu */}
+            <div className="p-4">
+              <p className="text-white/90 text-lg font-medium mb-6">
+                {mobileMegaMenu} - Conteúdo do menu
+              </p>
+
+              {/* Exemplo de conteúdo - Cliente */}
+              <div className="mb-8">
+                <h3 className="text-white font-semibold text-base mb-3">
+                  Cliente
+                </h3>
+                <div className="space-y-2 pl-2">
+                  {["Selecione...", "Empresa", "Selecione..."].map(
+                    (item, idx) => (
+                      <div
+                        key={idx}
+                        className="text-white/80 hover:text-white hover:bg-white/10 cursor-pointer p-3 rounded-lg transition-colors"
+                      >
+                        {item}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+
+              {/* Exemplo de conteúdo - Vendedor */}
+              <div className="mb-8">
+                <h3 className="text-white font-semibold text-base mb-3">
+                  Vendedor
+                </h3>
+                <div className="space-y-2 pl-2">
+                  {[
+                    "Situação",
+                    "Alvarisse",
+                    "Balizaráse",
+                    "Camadaleiras",
+                    "Todos...",
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="text-white/80 hover:text-white hover:bg-white/10 cursor-pointer p-3 rounded-lg transition-colors"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mais seções conforme necessário */}
+              <div className="mb-8">
+                <h3 className="text-white font-semibold text-base mb-3">
+                  Configurações
+                </h3>
+                <div className="space-y-2 pl-2">
+                  {["Preferências", "Relatórios", "Exportar", "Ajuda"].map(
+                    (item, idx) => (
+                      <div
+                        key={idx}
+                        className="text-white/80 hover:text-white hover:bg-white/10 cursor-pointer p-3 rounded-lg transition-colors"
+                      >
+                        {item}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </header>
