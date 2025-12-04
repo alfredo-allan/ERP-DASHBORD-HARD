@@ -275,8 +275,19 @@ const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center py-3 lg:py-[11px]">
             {/* Title */}
             <div className="flex items-center flex-1">
-              <div className="header-title">
-                <h1 className="text-white text-lg font-bold tracking-wide">
+              <div
+                className="
+  header-title
+  md:h-[52px] md:w-[150px]
+  md:flex md:items-center md:justify-center  {/* Centraliza conteúdo */}
+"
+              >
+                <h1
+                  className="
+    text-white text-lg font-bold tracking-wide
+    style=position: relative;left: 0;
+  "
+                >
                   CONTAS A RECEBER
                 </h1>
               </div>

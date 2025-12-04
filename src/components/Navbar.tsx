@@ -270,7 +270,8 @@ const NavBar: React.FC<NavBarProps> = ({
                 </button>
 
                 {/* Container interno */}
-                <div className="max-w-[1400px] mx-auto px-6 py-6">
+                <div className="max-w-[1400px] mx-auto px-6 py-6 md:h-[330px]">
+                  {" "}
                   {renderMegaMenuContent(item, false)}
                 </div>
               </div>

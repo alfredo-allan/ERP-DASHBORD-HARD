@@ -79,9 +79,16 @@ body {
   /* BOTÃO COM BORDA LARANJA */
   .btn-action {
     @apply flex items-center space-x-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-md
-         transition-all shadow-sm text-sm font-medium border-2
-         hover:bg-[var(--orange-primary)] hover:text-white
-         lg:w-[110px] lg:h-[28px] lg:px-0 lg:py-0 lg:justify-center;
+       transition-all shadow-sm text-sm font-medium border-2
+       hover:bg-[var(--orange-primary)] hover:text-white
+
+       /* Mobile: altura automática */
+
+       /* Tablet (md): altura fixa 28px */
+       md:h-[28px] md:px-3 md:py-1
+
+       /* Desktop (lg): altura fixa 28px e ajustes */
+       lg:w-[110px] lg:h-[28px] lg:px-0 lg:py-0 lg:justify-center;
 
     color: var(--orange-primary);
     border-color: var(--orange-primary);
