@@ -138,7 +138,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-900 w-full rounded-lg border border-gray-300 dark:border-slate-700 font-medium">
+    <div className="bg-white dark:bg-slate-900 w-fullborder-gray-300 dark:border-slate-700 font-medium">
       <div className="overflow-x-auto w-full">
         <table className="w-full min-w-[1200px]">
           {/* HEADER COM ÍCONES */}
@@ -191,7 +191,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
                     selectedRows.length === data.length && data.length > 0
                   }
                   onChange={handleSelectAll}
-                  className="rounded border-gray-400 dark:border-slate-500 text-[#6D5AEC] focus:ring-[#6D5AEC] bg-white dark:bg-slate-700"
+                  className=" text-[#6D5AEC] focus:ring-[#6D5AEC] bg-white dark:bg-slate-700"
                 />
               </th>
 
@@ -216,13 +216,9 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
                 key={row.id}
                 className={`
     border-b border-gray-300 dark:border-slate-600
-
-    hover:bg-[#FAE0CC]
-
-    ${row.status === "baixada" ? "text-[#008A45]" : ""}
-${row.status === "cancelada" ? "text-[#0047CC]" : ""}
-
-
+    hover:bg-[#FAE0CC]/30  {/* ← Adiciona opacidade */}
+    ${row.status === "baixada" ? "text-[#008A45] hover:text-[#008A45]" : ""}
+    ${row.status === "cancelada" ? "text-[#0047CC] hover:text-[#0047CC]" : ""}
     ${selectedRows.includes(row.id) ? "bg-orange-50 dark:bg-orange-900/20" : ""}
   `}
               >
@@ -232,15 +228,13 @@ ${row.status === "cancelada" ? "text-[#0047CC]" : ""}
                     type="checkbox"
                     checked={selectedRows.includes(row.id)}
                     onChange={() => handleRowSelect(row.id)}
-                    className="rounded border-gray-400 dark:border-slate-500 text-[#6D5AEC] focus:ring-[#6D5AEC] bg-white dark:bg-slate-700"
+                    className=" text-[#6D5AEC] focus:ring-[#6D5AEC] bg-white dark:bg-slate-700"
                   />
                 </td>
 
                 {/* Cliente com formatação especial */}
                 <td className="px-2 py-1 border-r border-gray-300 dark:border-slate-600 font-medium">
-                  <div className="text-xs whitespace-nowrap">
-                    {row.cliente}
-                  </div>
+                  <div className="text-xs whitespace-nowrap">{row.cliente}</div>
                 </td>
 
                 {/* Demais colunas na ORDEM CORRETA */}

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Header from "../components/AccountsReceivable/Header";
-import DataFilter from "../components/AccountsReceivable/DataFilter";
-import type { FilterField } from "../components/AccountsReceivable/DataFilter";
+import Header from "../../components/AccountsReceivable/Header";
+import DataFilter from "../../components/AccountsReceivable/DataFilter";
+import type { FilterField } from "../../components/AccountsReceivable/DataFilter";
 import DataTable, {
   type TableRow,
-} from "../components/AccountsReceivable/DataTable";
-import ModalIncludeInstallment from "../components/AccountsReceivable/ModalIncludeInstallment";
-import ModalGenerateInstallments from "../components/AccountsReceivable/ModalGenerateInstallment";
+} from "../../components/AccountsReceivable/DataTable";
+import ModalIncludeInstallment from "../../components/AccountsReceivable/ModalIncludeInstallment";
+import ModalGenerateInstallments from "../../components/AccountsReceivable/ModalGenerateInstallment";
 import { useGenerateInstallmentsModal } from "@/components/AccountsReceivable/hooks/useGenerateInstallmentsModal";
 
 // Interface para os dados do formulário do modal
@@ -350,18 +350,22 @@ export default function AccountsReceivable() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-      {/* Passa a função para abrir o modal para o Header */}
+      {/* Header sem margin-bottom */}
       <Header onIncluirClick={handleOpenIncludeModal} />
 
+      {/* DataFilter colado ao Header */}
       <DataFilter filters={filters} onFilterChange={handleFilterChange} />
 
-      <main className="max-w-full mx-auto py-8">
-        <div className="space-y-6">
+      {/* Main sem padding-top e espaço reduzido */}
+      <main className="max-w-full mx-auto">
+        <div className="space-y-0">
+          {" "}
+          {/* ← space-y-0 em vez de space-y-6 */}
           <DataTable data={tableData} onRowSelect={handleRowSelect} />
         </div>
       </main>
 
-      {/* Modal de Incluir Parcela */}
+      {/* Modais */}
       <ModalIncludeInstallment
         isOpen={isIncludeModalOpen}
         onClose={() => setIsIncludeModalOpen(false)}
@@ -370,7 +374,6 @@ export default function AccountsReceivable() {
         initialData={mockParcelaData}
       />
 
-      {/* Modal de Gerar Parcelas Avulsas */}
       <ModalGenerateInstallments
         isOpen={generateModal.isOpen}
         onClose={generateModal.closeModal}

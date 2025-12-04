@@ -37,6 +37,14 @@ const NavBar: React.FC<NavBarProps> = ({
     Relatórios: "#0096B8",
   };
 
+  const selectedButtonClasses: Record<string, string> = {
+    Cadastros: "bg-[#008A45] text-white",
+    Comercial: "bg-[#0047CC] text-white",
+    Financeiro: "bg-[#E66400] text-white",
+    Fiscal: "bg-[#8300E6] text-white",
+    Relatórios: "bg-[#0096B8] text-white",
+  };
+
   // Função para hover dinâmico
   const getHoverColorClass = (label: string) => {
     const colorMap: Record<string, string> = {
@@ -198,33 +206,51 @@ const NavBar: React.FC<NavBarProps> = ({
         {items.map((item) => (
           <div key={item.label} className="relative">
             <button
-              className="btn-ghost flex items-center space-x-1 hover:bg-gray-100 dark:hover:bg-slate-800 px-3 py-2 rounded-md transition-colors"
+              className={`
+    flex items-center justify-center
+    !rounded-none transition-colors duration-200
+    w-[150px] h-[42px] space-x-[10px]
+    ${
+      openMenu === item.label
+        ? `bg-[${textColors[item.label]}] text-white`
+        : `
+        bg-transparent
+        text-gray-700 dark:text-gray-200
+        hover:bg-gray-100 dark:hover:bg-slate-700
+      `
+    }
+  `}
               onClick={() => handleDesktopNavClick(item.label)}
             >
               <item.icon
                 size={27}
-                className={`w-[27px] h-[27px] min-w-[27px] min-h-[27px] ${item.iconColor}`}
+                className={`
+      w-[27px] h-[27px] min-w-[27px] min-h-[27px]
+      ${
+        openMenu === item.label
+          ? "text-white" // Selecionado: branco
+          : item.iconColor // Não selecionado: usa a cor do hook
+      }
+    `}
                 strokeWidth={2}
               />
-              <span className="font-medium text-gray-700 dark:text-gray-200">
-                {item.label}
-              </span>
+              <span className="font-medium">{item.label}</span>
             </button>
 
             {/* Mega menu DESKTOP */}
             {openMenu === item.label && (
               <div
                 className="
-                  fixed left-0 right-0 w-screen
-                  shadow-lg z-50 border-t-2
-                  top-16
-                  lg:max-h-[60vh] lg:overflow-y-auto
-                  max-lg:h-[calc(100vh-4rem)] max-lg:overflow-y-auto
-                  animate-in fade-in slide-in-from-top-2 duration-200
-                "
+    fixed left-0 right-0 w-screen
+    shadow-lg z-50 border-t-2 border-b-2
+    top-[42px]
+    lg:max-h-[60vh] lg:overflow-y-auto
+    max-lg:h-[calc(100vh-42px)]
+    animate-in fade-in slide-in-from-top-2 duration-200
+  "
                 style={{
                   backgroundColor: labelColors[item.label],
-                  borderColor: textColors[item.label],
+                  borderColor: textColors[item.label], // ← COR DAS BORDAS AQUI
                 }}
               >
                 {/* Botão X para fechar - APENAS MOBILE */}

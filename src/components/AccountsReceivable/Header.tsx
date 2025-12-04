@@ -168,26 +168,26 @@ const Header: React.FC<HeaderProps> = ({
       {/* Top Bar - Logo + Navigation + Icons */}
       <div className="border-b border-gray-200 dark:border-slate-700">
         <div className="max-w-full mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Left Section: Logo + Navigation */}
+          {/* Container principal com altura fixa */}
+          <div className="flex items-center justify-between h-[42px]">
+            {/* Seção Esquerda: Logo + Navigation */}
             <div className="flex items-center space-x-6 flex-1">
-              {/* Logo com imagens para temas claro e escuro */}
+              {/* Logo ajustado para altura 42px */}
               <div className="logo-container items-center">
                 <img
                   src={HsoftBlack}
                   alt="Hsoft"
-                  className="block dark:hidden h-12 w-auto"
+                  className="block dark:hidden h-10 w-auto"
                 />
                 <img
                   src={HsoftWhite}
                   alt="Hsoft"
-                  className="hidden dark:block h-12 w-auto"
+                  className="hidden dark:block h-10 w-auto"
                 />
               </div>
 
-              {/* Desktop Navigation usando NavBar */}
+              {/* Navigation */}
               <div className="flex-1">
-                {/* ✅ PASSANDO OS DADOS DO HOOK PARA O NAVBAR */}
                 <NavBar
                   items={navigationItems}
                   onItemClick={(item) => handleNavClick(item.label)}
@@ -195,7 +195,7 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            {/* Right Section: Search + Icons */}
+            {/* Seção Direita: Search + Icons */}
             <div className="flex items-center space-x-4">
               {/* Search Bar */}
               <div className="hidden md:flex items-center bg-gray-100 dark:bg-slate-800 rounded-lg px-3 py-2">
@@ -207,7 +207,7 @@ const Header: React.FC<HeaderProps> = ({
                 />
               </div>
 
-              {/* Icons - Responsivo */}
+              {/* Icons */}
               <div className="flex items-center space-x-1 sm:space-x-3">
                 <button className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors hidden sm:flex">
                   <Bell
@@ -230,7 +230,7 @@ const Header: React.FC<HeaderProps> = ({
                   />
                 </button>
 
-                {/* Theme Toggle - SEMPRE VISÍVEL */}
+                {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
@@ -245,7 +245,7 @@ const Header: React.FC<HeaderProps> = ({
                   )}
                 </button>
 
-                {/* User - SEMPRE VISÍVEL */}
+                {/* User */}
                 <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
                   <User
                     size={25}
@@ -258,7 +258,7 @@ const Header: React.FC<HeaderProps> = ({
             {/* Mobile Menu Button */}
             <button
               onClick={handleMobileMenuToggle}
-              className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors ml-2"
               aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
               {mobileMenuOpen ? <X size={25} /> : <Menu size={25} />}
