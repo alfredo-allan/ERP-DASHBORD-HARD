@@ -87,24 +87,53 @@ export default function SelectCliente({
       <PopoverTrigger asChild>
         <div
           className="
-            w-full              /* mobile/tablet */
-            lg:w-[630px]        /* desktop */
-            h-[28px]
-            flex items-center
-            border border-orange-500
-            rounded
-            px-2
-            bg-white dark:bg-slate-800
-            text-sm
-            cursor-pointer
-            text-gray-900 dark:text-gray-100
-          "
+    w-full              /* mobile/tablet */
+    lg:w-[630px]        /* desktop */
+    h-[28px]
+    flex items-center
+    border border-gray-300 dark:border-gray-600
+    rounded
+    px-2
+    bg-white dark:bg-slate-800
+    text-sm
+    cursor-pointer
+    text-gray-900 dark:text-gray-100
+    transition-colors duration-200
+    focus-within:border-orange-500
+    focus-within:ring-1 focus-within:ring-orange-500
+  "
         >
           <input
-            className="flex-1 bg-transparent outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+            className="
+      flex-1
+      bg-transparent
+      outline-none
+      text-gray-900 dark:text-gray-100
+      placeholder-gray-500 dark:placeholder-gray-400
+    "
             placeholder="Selecione..."
             value={filter || selected?.label || ""}
             onChange={handleInputChange}
+            onFocus={(e) => {
+              // Adiciona classes de foco para navegadores que não suportam focus-within
+              if (
+                !e.target.parentElement?.classList.contains("border-orange-500")
+              ) {
+                e.target.parentElement?.classList.add(
+                  "border-orange-500",
+                  "ring-1",
+                  "ring-orange-500"
+                );
+              }
+            }}
+            onBlur={(e) => {
+              // Remove classes de foco (fallback)
+              e.target.parentElement?.classList.remove(
+                "border-orange-500",
+                "ring-1",
+                "ring-orange-500"
+              );
+            }}
           />
           <Search
             className="w-4 h-4"

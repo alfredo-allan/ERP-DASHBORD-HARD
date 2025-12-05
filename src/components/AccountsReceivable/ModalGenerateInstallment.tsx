@@ -222,7 +222,14 @@ const ModalGenerateInstallments: React.FC<ModalGenerateInstallmentsProps> = ({
             className="text-[color:var(--orange-primary)] hover:bg-orange-50 dark:hover:bg-orange-900/20 p-1 rounded transition-colors"
             aria-label="Fechar modal"
           >
-            <X size={20} />
+            <X
+              size={20}
+              className="
+    text-[color:var(--orange-primary)]
+    hover:opacity-80
+    transition-opacity
+  "
+            />{" "}
           </button>
         </div>
 

@@ -1,5 +1,5 @@
 // NavBar.tsx - VERSÃO COMPLETA COM MOBILE INTEGRADO
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { X } from "lucide-react";
 import { NavigationItem } from "../hooks/useNavigation";
 
@@ -18,6 +18,7 @@ const NavBar: React.FC<NavBarProps> = ({
 }) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMegaMenu, setMobileMegaMenu] = useState<string | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Mapeamento de cores de fundo (tons claros)
   const labelColors: Record<string, string> = {
@@ -57,7 +58,7 @@ const NavBar: React.FC<NavBarProps> = ({
     return colorMap[label] || "hover:text-[#E66400]";
   };
 
-  // Handlers desktop
+  // Handlers desktop - CORRIGIDO
   const handleDesktopNavClick = (label: string) => {
     setOpenMenu((prev) => (prev === label ? null : label));
     if (onItemClick) {
@@ -66,7 +67,28 @@ const NavBar: React.FC<NavBarProps> = ({
     }
   };
 
+  const handleDesktopNavHover = (label: string) => {
+    // Limpa qualquer timeout pendente
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setOpenMenu(label);
+  };
+
+  const handleDesktopNavLeave = () => {
+    // Configura um timeout para fechar
+    hoverTimeoutRef.current = setTimeout(() => {
+      setOpenMenu(null);
+      hoverTimeoutRef.current = null;
+    }, 150); // Delay reduzido para melhor responsividade
+  };
+
   const handleCloseDesktopMenu = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
     setOpenMenu(null);
   };
 
@@ -85,6 +107,10 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   const closeAllMenus = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
     setOpenMenu(null);
     setMobileMegaMenu(null);
     if (onMobileClose) onMobileClose();
@@ -152,7 +178,7 @@ const NavBar: React.FC<NavBarProps> = ({
                     ${
                       isMobile
                         ? "text-white/80 hover:text-white cursor-pointer p-3 rounded-lg hover:bg-white/10 transition-colors border-l-2 border-transparent hover:border-l-4 hover:pl-4"
-                        : `text-gray-800 dark:text-black cursor-pointer p-2 rounded  transition-colors duration-200  hover:pl-3 ${getHoverColorClass(
+                        : `text-gray-800 dark:text-black cursor-pointer p-2 rounded transition-colors duration-200 hover:pl-3 ${getHoverColorClass(
                             item.label
                           )} dark:${getHoverColorClass(item.label).replace(
                             "hover:",
@@ -204,34 +230,36 @@ const NavBar: React.FC<NavBarProps> = ({
       {/* DESKTOP NAVIGATION */}
       <nav className="hidden lg:flex items-center space-x-1 w-full">
         {items.map((item) => (
-          <div key={item.label} className="relative">
+          <div
+            key={item.label}
+            className="relative"
+            onMouseEnter={() => handleDesktopNavHover(item.label)}
+            onMouseLeave={handleDesktopNavLeave}
+          >
             <button
               className={`
-    flex items-center justify-center
-    !rounded-none transition-colors duration-200
-    w-[150px] h-[42px] space-x-[10px]
-    ${
-      openMenu === item.label
-        ? `bg-[${textColors[item.label]}] text-white`
-        : `
-        bg-transparent
-        text-gray-700 dark:text-gray-200
-        hover:bg-gray-100 dark:hover:bg-slate-700
-      `
-    }
-  `}
+                flex items-center justify-center
+                !rounded-none transition-colors duration-200
+                w-[150px] h-[42px] space-x-[10px]
+                ${
+                  openMenu === item.label
+                    ? selectedButtonClasses[item.label] ||
+                      "bg-blue-600 text-white"
+                    : `
+                    bg-transparent
+                    text-gray-700 dark:text-gray-200
+                    hover:bg-gray-100 dark:hover:bg-slate-700
+                  `
+                }
+              `}
               onClick={() => handleDesktopNavClick(item.label)}
             >
               <item.icon
                 size={27}
                 className={`
-      w-[27px] h-[27px] min-w-[27px] min-h-[27px]
-      ${
-        openMenu === item.label
-          ? "text-white" // Selecionado: branco
-          : item.iconColor // Não selecionado: usa a cor do hook
-      }
-    `}
+                  w-[27px] h-[27px] min-w-[27px] min-h-[27px]
+                  ${openMenu === item.label ? "text-white" : item.iconColor}
+                `}
                 strokeWidth={2}
               />
               <span className="font-medium">{item.label}</span>
@@ -241,17 +269,19 @@ const NavBar: React.FC<NavBarProps> = ({
             {openMenu === item.label && (
               <div
                 className="
-    fixed left-0 right-0 w-screen
-    shadow-lg z-50 border-t-2 border-b-2
-    top-[42px]
-    lg:max-h-[60vh] lg:overflow-y-auto
-    max-lg:h-[calc(100vh-42px)]
-    animate-in fade-in slide-in-from-top-2 duration-200
-  "
+                  fixed left-0 right-0 w-screen
+                  shadow-lg z-50 border-t-2 border-b-2
+                  top-[42px]
+                  lg:max-h-[60vh] lg:overflow-y-auto
+                  max-lg:h-[calc(100vh-42px)]
+                  animate-in fade-in slide-in-from-top-2 duration-200
+                "
                 style={{
                   backgroundColor: labelColors[item.label],
-                  borderColor: textColors[item.label], // ← COR DAS BORDAS AQUI
+                  borderColor: textColors[item.label],
                 }}
+                onMouseEnter={() => handleDesktopNavHover(item.label)}
+                onMouseLeave={handleDesktopNavLeave}
               >
                 {/* Botão X para fechar - APENAS MOBILE */}
                 <button
@@ -271,7 +301,6 @@ const NavBar: React.FC<NavBarProps> = ({
 
                 {/* Container interno */}
                 <div className="max-w-[1400px] mx-auto px-6 py-6 md:h-[330px]">
-                  {" "}
                   {renderMegaMenuContent(item, false)}
                 </div>
               </div>
@@ -316,7 +345,7 @@ const NavBar: React.FC<NavBarProps> = ({
           {/* Mega Menu Container */}
           <div
             className="absolute top-0 left-0 right-0 h-full overflow-y-auto"
-            style={{ backgroundColor: textColors[mobileMegaMenu] }} // Cores escuras para mobile
+            style={{ backgroundColor: textColors[mobileMegaMenu] }}
           >
             {/* Header do Mega Menu Mobile */}
             <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/20 bg-black/10 backdrop-blur-sm">

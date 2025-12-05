@@ -120,17 +120,31 @@ const ModalIncludeInstallment: React.FC<ModalIncludeInstallmentProps> = ({
 
       {/* Modal Container - Responsivo */}
       <div
-        className="relative w-full max-w-[777px] max-h-[585px] overflow-y-auto md:overflow-y-visible bg-white dark:bg-slate-800 rounded-lg shadow-2xl p-2 md:p-[8px]"
+        className="relative w-full
+  max-w-[777px] max-h-[585px]
+  overflow-y-auto md:overflow-y-visible
+  bg-white dark:bg-slate-800 rounded-lg shadow-2xl
+  p-2 md:p-[8px]
+
+  /* Telas médias: ajustável */
+  md:max-w-[90vw] md:max-h-[80vh]  {/* 90% da largura da tela, 80% da altura */}
+  md:w-auto  {/* Largura automática */}
+
+  /* Desktop: fixo (777px × 585px) */
+  lg:max-w-[777px] lg:max-h-[585px]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho */}
-        <div className="w-full md:w-[777px] h-[40px] md:h-[29px] border-b border-gray-200 dark:border-slate-700 rounded-t-lg flex items-center justify-between px-4 text-[16px] md:text-[14px]">
+        <div className="w-full md:w-[777px] h-[40px] md:h-[29px]  border-gray-200 dark:border-slate-700 rounded-t-lg flex items-center justify-between px-4 text-[16px] md:text-[14px]">
           <h2 className="text-[color:var(--orange-primary)] font-bold text-lg md:-ml-4">
             Incluir Parcela Avulsa
           </h2>
           <button
             onClick={onClose}
-            className="text-[color:var(--orange-primary)] hover:bg-orange-50 dark:hover:bg-orange-900/20 p-1 rounded transition-colors"
+            className="text-[color:var(--orange-primary)] hover:bg-orange-50 dark:hover:bg-orange-900/20 p-1 rounded transition-color
+            md:p-3           /* Padding maior */
+            md:mx-10
+            lg:mx-0"
             aria-label="Fechar modal"
           >
             <X size={20} />
@@ -159,11 +173,34 @@ const ModalIncludeInstallment: React.FC<ModalIncludeInstallmentProps> = ({
                     onChange={(e) =>
                       handleInputChange("fatura", e.target.value)
                     }
-                    className="w-full h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
+                    className="
+      w-full           /* Mobile: 100% */
+      md:w-[713px]     /* Tablet: 713px */
+      lg:w-[239px]     /* Desktop: 289px */
+      h-[28px]         /* Altura fixa 28px em todos */
+      px-3 pr-8        /* Padding direito para o ícone */
+      text-sm
+      border border-gray-300 dark:border-slate-600
+      rounded
+      bg-white dark:bg-slate-700
+      text-gray-900 dark:text-gray-100
+      focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent
+      cursor-text
+      hover:border-[color:var(--orange-primary)]
+    "
                   />
                   <Copy
                     size={16}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
+                    className="
+      absolute
+    right-2          /* Mobile: 8px */
+    md:right-[-460px]       /* Tablet: 16px */
+    lg:right-2       /* Desktop: 8px novamente */
+    top-1/2
+    transform -translate-y-1/2
+    text-gray-400 dark:text-gray-500
+    pointer-events-nonepointer-events-none
+    "
                   />
                 </div>
               </div>
@@ -184,7 +221,19 @@ const ModalIncludeInstallment: React.FC<ModalIncludeInstallmentProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, cliente: e.target.value })
                     } // Permite digitar
-                    className="w-full md:w-[761px] h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent cursor-text hover:border-[color:var(--orange-primary)]"
+                    className="w-full
+    md:w-[713px]    {/* Tablet: 787px */}
+    lg:w-[761px]    {/* Desktop: 761px (mantém original) */}
+    h-[28px]
+    px-3 pr-8
+    text-sm
+    border border-gray-300 dark:border-slate-600
+    rounded
+    bg-white dark:bg-slate-700
+    text-gray-900 dark:text-gray-100
+    focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent
+    cursor-text
+    hover:border-[color:var(--orange-primary)]"
                     placeholder="Digite ou selecione um cliente" // Placeholder opcional
                   />
 
@@ -215,9 +264,19 @@ const ModalIncludeInstallment: React.FC<ModalIncludeInstallmentProps> = ({
                     onChange={(e) =>
                       handleInputChange("vendedor", e.target.value)
                     }
-                    className="
-
-w-full md:w-[761px] h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent cursor-pointer hover:border-[color:var(--orange-primary)]"
+                    className="   w-full
+    md:w-[713px]    {/* Tablet: 787px */}
+    lg:w-[761px]    {/* Desktop: 761px (mantém original) */}
+    h-[28px]
+    px-3 pr-8
+    text-sm
+    border border-gray-300 dark:border-slate-600
+    rounded
+    bg-white dark:bg-slate-700
+    text-gray-900 dark:text-gray-100
+    focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent
+    cursor-text
+  "
                   />
                   <SquareArrowDown
                     size={16}
@@ -238,7 +297,19 @@ w-full md:w-[761px] h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:borde
                     onChange={(e) =>
                       handleInputChange("empresa", e.target.value)
                     }
-                    className="w-full md:w-[761px] h-[28px] px-3 pr-8 text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent"
+                    className="  w-full
+    md:w-[713px]    {/* Tablet: 787px */}
+    lg:w-[761px]    {/* Desktop: 761px (mantém original) */}
+    h-[28px]
+    px-3 pr-8
+    text-sm
+    border border-gray-300 dark:border-slate-600
+    rounded
+    bg-white dark:bg-slate-700
+    text-gray-900 dark:text-gray-100
+    focus:outline-none focus:ring-2 focus:ring-[color:var(--orange-primary)] focus:border-transparent
+    cursor-text
+    hover:border-[color:var(--orange-primary)]"
                   />
                   <SquareArrowDown
                     size={16}

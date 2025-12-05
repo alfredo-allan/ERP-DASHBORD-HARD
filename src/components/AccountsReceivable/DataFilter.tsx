@@ -161,8 +161,12 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
           <div className="flex-1 space-y-4">
             {leftColumnFilters.map((item, i) => (
               <div key={i} className="space-y-1">
-                <label className="block text-sm font-semibold text-orange-600 dark:text-orange-400">
-                  {item.label}
+<label
+  className="block text-sm font-semibold"
+  style={{
+    color: 'var(--orange-primary, #e66400)'
+  }}
+>                  {item.label}
                 </label>
                 {item.path && renderField(item.path, i, 0)}
               </div>
@@ -175,8 +179,12 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {rightColumnFirstRow.map((item, i) => (
                 <div key={i} className="space-y-1">
-                  <label className="block text-sm font-semibold text-orange-600 dark:text-orange-400">
-                    {item.label}
+  <label
+  className="block text-sm font-semibold"
+  style={{
+    color: 'var(--orange-primary, #e66400)'
+  }}
+>                    {item.label}
                   </label>
                   {filters[item.row]?.[item.col] &&
                     renderField(
@@ -192,8 +200,12 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {rightColumnSecondRow.map((item, i) => (
                 <div key={i} className="space-y-1">
-                  <label className="block text-sm font-semibold text-orange-600 dark:text-orange-400">
-                    {item.label}
+  <label
+  className="block text-sm font-semibold"
+  style={{
+    color: 'var(--orange-primary, #e66400)'
+  }}
+>                    {item.label}
                   </label>
                   {filters[item.row]?.[item.col] &&
                     renderField(
