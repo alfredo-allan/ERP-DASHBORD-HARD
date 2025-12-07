@@ -8,6 +8,7 @@ import DataTable, {
 import ModalIncludeInstallment from "../../components/AccountsReceivable/ModalIncludeInstallment";
 import ModalGenerateInstallments from "../../components/AccountsReceivable/ModalGenerateInstallment";
 import { useGenerateInstallmentsModal } from "@/components/AccountsReceivable/hooks/useGenerateInstallmentsModal";
+import TableActionsHover from "../../components/TableActionsHover/TableActionsHover";
 
 // Interface para os dados do formulário do modal
 interface ParcelaData {
@@ -41,6 +42,89 @@ const mockParcelaData: ParcelaData = {
   observacao: "",
 };
 
+// Dados mock para tabela
+const mockAbertas: TableRow[] = [
+  {
+    id: "1",
+    cliente: "15 - SOLUGAO TI ASSISTENCIA...",
+    emp: "2",
+    pedido: "752",
+    nota: "567",
+    parc: "10",
+    vencimento: "04/11/2022",
+    valor: "R$ 238,92",
+    dias: "5",
+    multa: "R$ 11,95",
+    juros: "R$ 4,78",
+    valorTotal: "R$ 522,10",
+  },
+  {
+    id: "3",
+    cliente: "1652 - WEB PALMAS PAPELARIA...",
+    emp: "2",
+    pedido: "752",
+    nota: "567",
+    parc: "10",
+    vencimento: "31/10/2020",
+    valor: "R$ 1.500,00",
+    dias: "15",
+    multa: "R$ 75,00",
+    juros: "R$ 30,00",
+    valorTotal: "R$ 1.650,00",
+  },
+];
+
+const mockBaixadas: TableRow[] = [
+  {
+    id: "10",
+    cliente: "564 - MERCADINHO POPULAR",
+    emp: "3",
+    pedido: "3321",
+    nota: "883",
+    parc: "03",
+    vencimento: "10/02/2024",
+    valor: "R$ 820,00",
+    dias: "0",
+    multa: "R$ 0,00",
+    juros: "R$ 0,00",
+    valorTotal: "R$ 820,00",
+    status: "baixada",
+  },
+  {
+    id: "11",
+    cliente: "98 - BARATÃO SUPERMERCADO",
+    emp: "1",
+    pedido: "4412",
+    nota: "982",
+    parc: "02",
+    vencimento: "03/02/2024",
+    valor: "R$ 452,00",
+    dias: "0",
+    multa: "R$ 0,00",
+    juros: "0,00",
+    valorTotal: "R$ 452,00",
+    status: "baixada",
+  },
+];
+
+const mockCanceladas: TableRow[] = [
+  {
+    id: "20",
+    cliente: "87 - PEDRO DISTRIBUIDORA",
+    emp: "9",
+    pedido: "7782",
+    nota: "8821",
+    parc: "01",
+    vencimento: "20/11/2023",
+    valor: "R$ 199,00",
+    dias: "—",
+    multa: "—",
+    juros: "—",
+    valorTotal: "R$ 199,00",
+    status: "cancelada",
+  },
+];
+
 export default function AccountsReceivable() {
   // Estado para controlar o modal Incluir Parcela
   const [isIncludeModalOpen, setIsIncludeModalOpen] = useState(false);
@@ -48,6 +132,10 @@ export default function AccountsReceivable() {
   // Hook para controlar o modal Gerar Parcelas
   const generateModal = useGenerateInstallmentsModal();
 
+  // Estado para hover das linhas da tabela
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+
+  // Filtros
   const [filters, setFilters] = useState<FilterField[][]>([
     [
       {
@@ -140,145 +228,17 @@ export default function AccountsReceivable() {
     ],
   ]);
 
-  // const tableData: TableRow[] = [
-  //   {
-  //     id: "1",
-  //     cliente:
-  //       "15 - SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
-  //     emp: "2",
-  //     pedido: "752",
-  //     nota: "567",
-  //     parc: "10",
-  //     vencimento: "04/11/2022",
-  //     valor: "R$ 238,92",
-  //     dias: "5",
-  //     multa: "R$ 11,95",
-  //     juros: "R$ 4,78",
-  //     valorTotal: "R$ 522,10",
-  //   },
-  //   {
-  //     id: "2",
-  //     cliente:
-  //       "15- SOLUGAO TI ASSISTENCIA TECNICA EM INFORMATICA LTDA - 10.552.934/C 2",
-  //     emp: "2",
-  //     pedido: "752",
-  //     nota: "567",
-  //     parc: "10",
-  //     vencimento: "04/14/2022",
-  //     valor: "R$ 238,92",
-  //     dias: "8",
-  //     multa: "R$ 19,11",
-  //     juros: "R$ 7,64",
-  //     valorTotal: "R$ 522,10",
-  //   },
-  //   {
-  //     id: "3",
-  //     cliente: "1652 - WEB PALMAS PAPELARIA E INFORMATICA - 10.552.934/0001-90",
-  //     emp: "2",
-  //     pedido: "752",
-  //     nota: "567",
-  //     parc: "10",
-  //     vencimento: "31/10/2020",
-  //     valor: "R$ 1.500,00",
-  //     dias: "15",
-  //     multa: "R$ 75,00",
-  //     juros: "R$ 30,00",
-  //     valorTotal: "R$ 1.650,00",
-  //   },
-  // ];
-  const mockAbertas: TableRow[] = [
-    {
-      id: "1",
-      cliente: "15 - SOLUGAO TI ASSISTENCIA...",
-      emp: "2",
-      pedido: "752",
-      nota: "567",
-      parc: "10",
-      vencimento: "04/11/2022",
-      valor: "R$ 238,92",
-      dias: "5",
-      multa: "R$ 11,95",
-      juros: "R$ 4,78",
-      valorTotal: "R$ 522,10",
-    },
-    {
-      id: "3",
-      cliente: "1652 - WEB PALMAS PAPELARIA...",
-      emp: "2",
-      pedido: "752",
-      nota: "567",
-      parc: "10",
-      vencimento: "31/10/2020",
-      valor: "R$ 1.500,00",
-      dias: "15",
-      multa: "R$ 75,00",
-      juros: "R$ 30,00",
-      valorTotal: "R$ 1.650,00",
-    },
-  ];
-
-  const mockBaixadas: TableRow[] = [
-    {
-      id: "10",
-      cliente: "564 - MERCADINHO POPULAR",
-      emp: "3",
-      pedido: "3321",
-      nota: "883",
-      parc: "03",
-      vencimento: "10/02/2024",
-      valor: "R$ 820,00",
-      dias: "0",
-      multa: "R$ 0,00",
-      juros: "R$ 0,00",
-      valorTotal: "R$ 820,00",
-      status: "baixada",
-    },
-    {
-      id: "11",
-      cliente: "98 - BARATÃO SUPERMERCADO",
-      emp: "1",
-      pedido: "4412",
-      nota: "982",
-      parc: "02",
-      vencimento: "03/02/2024",
-      valor: "R$ 452,00",
-      dias: "0",
-      multa: "R$ 0,00",
-      juros: "0,00",
-      valorTotal: "R$ 452,00",
-      status: "baixada",
-    },
-  ];
-
-  const mockCanceladas: TableRow[] = [
-    {
-      id: "20",
-      cliente: "87 - PEDRO DISTRIBUIDORA",
-      emp: "9",
-      pedido: "7782",
-      nota: "8821",
-      parc: "01",
-      vencimento: "20/11/2023",
-      valor: "R$ 199,00",
-      dias: "—",
-      multa: "—",
-      juros: "—",
-      valorTotal: "R$ 199,00",
-      status: "cancelada",
-    },
-  ];
-
   const [situacao, setSituacao] = useState("abertas");
   const [tableData, setTableData] = useState<TableRow[]>(mockAbertas);
 
+  // Handlers
   const handleRowSelect = (selectedRows: string[]) => {
     console.log("Linhas selecionadas:", selectedRows);
   };
+
   const handleFilterChange = (newFilters: FilterField[][]) => {
     setFilters(newFilters);
-
     const novaSituacao = newFilters[2][1]?.value || "abertas";
-
     setSituacao(novaSituacao);
 
     switch (novaSituacao) {
@@ -296,19 +256,14 @@ export default function AccountsReceivable() {
     }
   };
 
-  // Função quando clica em "Incluir" no Header
   const handleOpenIncludeModal = () => {
     setIsIncludeModalOpen(true);
   };
 
-  // Função quando confirma dados no modal Incluir Parcela
   const handleConfirmIncludeModal = (data: ParcelaData) => {
     console.log("✅ Dados da parcela incluída:", data);
-
-    // Fecha o modal de Incluir
     setIsIncludeModalOpen(false);
 
-    // Abre o modal de Gerar Parcelas com os dados preenchidos
     generateModal.openModal({
       empresa: data.empresa,
       cliente: data.cliente,
@@ -321,24 +276,18 @@ export default function AccountsReceivable() {
       portador: "",
       prazo: "30",
     });
-
-    // Opcional: mostrar alerta
-    // alert("Parcela incluída com sucesso! Agora gere as parcelas.");
   };
 
-  // Função quando clica em "Gerar Parcelas" diretamente (botão dentro do modal)
   const handleOpenGenerateModalFromButton = () => {
     setIsIncludeModalOpen(false);
     generateModal.openModal();
   };
 
-  // Função quando confirma as parcelas geradas
   const handleConfirmGeneratedParcelas = (parcelas: any[]) => {
     console.log("📦 Parcelas geradas para salvar:", parcelas);
     console.log("💰 Total:", generateModal.calcularTotal());
     console.log("🔢 Quantidade:", generateModal.contarParcelas());
 
-    // Aqui você faria a chamada para a API
     alert(
       `${
         parcelas.length
@@ -348,24 +297,72 @@ export default function AccountsReceivable() {
     generateModal.closeModal();
   };
 
+  // Funções para as ações da tabela (TableActionsHover)
+  const handleViewRow = (rowData: TableRow) => {
+    console.log("📋 Visualizando linha:", rowData);
+    alert(`Visualizando: ${rowData.cliente}\nValor: ${rowData.valor}`);
+  };
+
+  const handleCopyRow = (rowData: TableRow) => {
+    console.log("📋 Copiando linha:", rowData);
+    const texto = `Cliente: ${rowData.cliente}\nValor: ${rowData.valor}\nVencimento: ${rowData.vencimento}`;
+    navigator.clipboard.writeText(texto);
+  };
+
+  const handleSendRow = (rowData: TableRow) => {
+    console.log("📤 Enviando linha:", rowData);
+    alert(`Enviar dados de: ${rowData.cliente}\nPara qual destino?`);
+  };
+  const handlePrintRow = (rowData: TableRow) => {
+    console.log("🖨️ Imprimindo linha:", rowData);
+    // Você pode customizar a impressão aqui
+    alert(`Imprimindo dados de: ${rowData.cliente}\nGerando comprovante...`);
+  };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-      {/* Header sem margin-bottom */}
+      {/* Header */}
       <Header onIncluirClick={handleOpenIncludeModal} />
 
-      {/* DataFilter colado ao Header */}
+      {/* DataFilter */}
       <DataFilter filters={filters} onFilterChange={handleFilterChange} />
 
-      {/* Main sem padding-top e espaço reduzido */}
+      {/* Main content com wrapper simples */}
       <main className="max-w-full mx-auto">
         <div className="space-y-0">
-          {" "}
-          {/* ← space-y-0 em vez de space-y-6 */}
-          <DataTable data={tableData} onRowSelect={handleRowSelect} />
+          {/* Envolva a tabela em um container relativo */}
+          <div className="relative">
+            <DataTable
+              data={tableData}
+              onRowSelect={handleRowSelect}
+              // Se o DataTable tiver prop para custom render, use:
+              // renderRowActions={renderRowActions}
+            />
+
+            {/* Hover actions flutuante simples */}
+            {tableData.map(
+              (row) =>
+                hoveredRowId === row.id && (
+                  <div
+                    key={`hover-${row.id}`}
+                    className="absolute left-1/2 transform -translate-x-1/2 z-50"
+                    style={{
+                      top: `${40 + parseInt(row.id) * 48}px`, // Ajuste a posição Y
+                    }}
+                  >
+                    <TableActionsHover
+                      rowData={row}
+                      onView={() => handleViewRow(row)}
+                      onCopy={() => handleCopyRow(row)}
+                      onSend={() => handleSendRow(row)}
+                    />
+                  </div>
+                )
+            )}
+          </div>
         </div>
       </main>
 
-      {/* Modais */}
+      {/* MODAIS MANTIDOS */}
       <ModalIncludeInstallment
         isOpen={isIncludeModalOpen}
         onClose={() => setIsIncludeModalOpen(false)}

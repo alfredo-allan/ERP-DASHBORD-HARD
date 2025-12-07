@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   CheckSquare,
   HelpCircle,
@@ -6,6 +6,7 @@ import {
   Barcode,
   DollarSign,
 } from "lucide-react";
+import TableActionsHover from "../TableActionsHover/TableActionsHover";
 
 export interface TableRow {
   id: string;
@@ -27,6 +28,10 @@ export interface TableRow {
 export interface DataTableProps {
   data: TableRow[];
   onRowSelect?: (selectedRows: string[]) => void;
+  onRowView?: (row: TableRow) => void;
+  onRowCopy?: (row: TableRow) => void;
+  onRowSend?: (row: TableRow) => void;
+  onRowPrint?: (row: TableRow) => void;
 }
 
 // Interface para as colunas
@@ -58,8 +63,22 @@ const TotalCard: React.FC<{
   </div>
 );
 
-const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
+const DataTable: React.FC<DataTableProps> = ({
+  data,
+  onRowSelect,
+  onRowView,
+  onRowCopy,
+  onRowSend,
+  onRowPrint,
+}) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+  const [isActionsHovered, setIsActionsHovered] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const rowRefs = useRef<Map<string, HTMLTableRowElement>>(new Map());
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   const handleRowSelect = (rowId: string) => {
     const newSelectedRows = selectedRows.includes(rowId)
@@ -76,6 +95,82 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
     setSelectedRows(newSelectedRows);
     onRowSelect?.(newSelectedRows);
   };
+
+  const handleMouseEnterRow = (rowId: string, event: React.MouseEvent) => {
+    // Limpa qualquer timeout anterior
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+
+    setHoveredRowId(rowId);
+    updateHoverPosition(rowId);
+  };
+
+  const handleMouseLeaveRow = () => {
+    // Só esconde se não estiver hover no actions
+    if (!isActionsHovered) {
+      hoverTimeoutRef.current = setTimeout(() => {
+        if (!isActionsHovered) {
+          setHoveredRowId(null);
+        }
+      }, 300); // Delay de 300ms para dar tempo de mover para o actions
+    }
+  };
+
+  const handleMouseEnterActions = () => {
+    setIsActionsHovered(true);
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+  };
+
+  const handleMouseLeaveActions = () => {
+    setIsActionsHovered(false);
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredRowId(null);
+    }, 200);
+  };
+
+  const updateHoverPosition = (rowId: string) => {
+    const rowElement = rowRefs.current.get(rowId);
+    if (rowElement) {
+      const rect = rowElement.getBoundingClientRect();
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      // Posiciona no final da linha, mas com uma área maior de hover
+      setHoverPosition({
+        x: rect.right - 250, // 250px da direita
+        y: rect.top + scrollTop + rect.height / 2 - 16, // Centralizado
+      });
+    }
+  };
+
+  const handleMouseMoveRow = (rowId: string) => {
+    if (hoveredRowId === rowId) {
+      updateHoverPosition(rowId);
+    }
+  };
+
+  // Atualiza refs das linhas
+  useEffect(() => {
+    rowRefs.current.clear();
+    data.forEach((row) => {
+      const element = document.getElementById(`row-${row.id}`);
+      if (element) {
+        rowRefs.current.set(row.id, element as HTMLTableRowElement);
+      }
+    });
+  }, [data]);
+
+  // Limpa timeouts ao desmontar
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Header com totais - ÍCONES COM CORES ESPECÍFICAS
   const totals = {
@@ -137,10 +232,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
     },
   ];
 
+  // Encontra a linha atual pelo hover
+  const hoveredRow = hoveredRowId
+    ? data.find((row) => row.id === hoveredRowId)
+    : null;
+
   return (
-    <div className="bg-white dark:bg-slate-900 w-fullborder-gray-300 dark:border-slate-700 font-medium">
+    <div className="bg-white dark:bg-slate-900 w-full border-gray-300 dark:border-slate-700 font-medium relative">
       <div className="overflow-x-auto w-full">
-        <table className="w-full min-w-[1200px]">
+        <table className="w-full min-w-[1200px]" ref={tableRef}>
           {/* HEADER COM ÍCONES */}
           <thead>
             {/* Primeira linha - Ícones */}
@@ -214,13 +314,18 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
             {data.map((row) => (
               <tr
                 key={row.id}
+                id={`row-${row.id}`}
                 className={`
     border-b border-gray-300 dark:border-slate-600
-    hover:bg-[#FAE0CC]/30  {/* ← Adiciona opacidade */}
+    hover:bg-[#FAE0CC]/30
     ${row.status === "baixada" ? "text-[#008A45] hover:text-[#008A45]" : ""}
     ${row.status === "cancelada" ? "text-[#0047CC] hover:text-[#0047CC]" : ""}
     ${selectedRows.includes(row.id) ? "bg-orange-50 dark:bg-orange-900/20" : ""}
+    group
   `}
+                onMouseEnter={(e) => handleMouseEnterRow(row.id, e)}
+                onMouseLeave={handleMouseLeaveRow}
+                onMouseMove={() => handleMouseMoveRow(row.id)}
               >
                 {/* Checkbox */}
                 <td className="px-1 py-1 border-r border-gray-300 dark:border-slate-600">
@@ -255,6 +360,29 @@ const DataTable: React.FC<DataTableProps> = ({ data, onRowSelect }) => {
           </tbody>
         </table>
       </div>
+
+      {/* TableActionsHover flutuante com área de hover estendida */}
+      {hoveredRow && (
+        <div
+          ref={actionsRef}
+          className="fixed z-50 transition-all duration-200"
+          style={{
+            left: `${hoverPosition.x}px`,
+            top: `${hoverPosition.y}px`,
+          }}
+          onMouseEnter={handleMouseEnterActions}
+          onMouseLeave={handleMouseLeaveActions}
+        >
+          <TableActionsHover
+            rowData={hoveredRow}
+            rowStatus={hoveredRow.status} // ← AQUI! PASSA O STATUS DA LINHA
+            onView={() => onRowView?.(hoveredRow)}
+            onCopy={() => onRowCopy?.(hoveredRow)}
+            onSend={() => onRowSend?.(hoveredRow)}
+            onPrint={() => onRowPrint?.(hoveredRow)}
+          />
+        </div>
+      )}
     </div>
   );
 };
