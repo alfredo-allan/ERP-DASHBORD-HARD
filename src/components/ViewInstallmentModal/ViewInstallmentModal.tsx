@@ -371,7 +371,7 @@ const ViewInstallmentModal: React.FC<ViewInstallmentModalProps> = ({
               <button
                 // ADICIONADO: group para habilitar o group-hover no ícone
                 // AJUSTADO: gap-2 para centralização visual
-                className="group btn-action w-[110px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
+                className="group btn-action w-[125px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
                 title="Visualizar Orçamento"
               >
                 {/* CORREÇÃO: Cor base do ícone por classe + Hover para branco. Removido style={iconStyle} */}
@@ -384,7 +384,7 @@ const ViewInstallmentModal: React.FC<ViewInstallmentModalProps> = ({
 
               {/* Botão 2: Pedido (ClipboardList) */}
               <button
-                className="group btn-action w-[110px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
+                className="group btn-action w-[125px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
                 title="Visualizar Pedido"
               >
                 <ClipboardList
@@ -396,7 +396,7 @@ const ViewInstallmentModal: React.FC<ViewInstallmentModalProps> = ({
 
               {/* Botão 3: Nota Fiscal (File) */}
               <button
-                className="group btn-action w-[110px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
+                className="group btn-action w-[125px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
                 title="Visualizar Nota Fiscal"
               >
                 <File
@@ -408,7 +408,7 @@ const ViewInstallmentModal: React.FC<ViewInstallmentModalProps> = ({
 
               {/* Botão 4: Anexo (Paperclip) */}
               <button
-                className="group btn-action w-[110px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
+                className="group btn-action w-[125px] h-[28px] justify-center border-2 border-[var(--orange-primary)] rounded-md text-[10px] text-[var(--orange-primary)] gap-2"
                 title="Visualizar Anexo"
               >
                 {/* Ícone corrigido */}
