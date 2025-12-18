@@ -394,7 +394,7 @@ const Header: React.FC<HeaderProps> = ({
         {/* Linha laranja em FULL WIDTH */}
         <div className="absolute left-0 right-0 bottom-0 h-px bg-[var(--orange-primary)]"></div>
         <div className="max-w-full mx-auto px-4 relative z-10">
-          <div className="flex items-center py-3 lg:py-[11px]">
+          <div className="flex items-center py-3 lg:py-[10px]">
             {/* Title */}
             <div className="flex items-center flex-1">
               <div
@@ -416,7 +416,7 @@ const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Action Buttons - Desktop */}
-            <div className="hidden md:flex items-center space-x-2 ml-4">
+            <div className="hidden md:flex items-center space-x-2 ml-4 lg:relative lg:left-3 ">
               {actionButtons.map((btn, index) => (
                 <button
                   key={`action-${index}`}
