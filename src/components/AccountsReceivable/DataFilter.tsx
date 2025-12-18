@@ -236,7 +236,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
             {/* Coluna Direita */}
             <div className="flex-mb-[-5px]">
               {/* Período + Tipo Data */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {rightColumnFirstRow.map((item, i) => (
                   <div key={i} className="-mb-[-5px]">
                     <label
@@ -259,7 +259,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
               </div>
 
               {/* Nota Fiscal, Duplicata, Pedido, Orçamento */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {rightColumnSecondRow.map((item, i) => (
                   <div key={i} className="-mb-[-10px]">
                     <label

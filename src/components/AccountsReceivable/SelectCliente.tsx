@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 import {
   Command,
@@ -13,7 +13,6 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 
-// Interfaces para tipagem
 interface ClienteOption {
   value: string;
   label: string;
@@ -31,7 +30,6 @@ interface SelectClienteProps {
   onChange: (value: string) => void;
 }
 
-// Função utilitária para parse do cliente
 function parseCliente(label: string): ParsedCliente {
   const regex = /^(\d+)\s-\s(.+?)\s-\s(.+)$/;
   const match = label.match(regex);
@@ -58,64 +56,98 @@ export default function SelectCliente({
 }: SelectClienteProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   const selected = options.find((o) => o.value === value);
 
-  // Listagem filtrada pelo texto digitado no trigger
-  const filteredOptions = useMemo(() => {
-    if (!filter) return options;
+  // Sincroniza o inputValue com o selected quando o value muda
+  useEffect(() => {
+    if (selected) {
+      const parsed = parseCliente(selected.label);
+      setInputValue(parsed.nome); // Mostra apenas o nome no input
+    } else {
+      setInputValue("");
+    }
+  }, [selected]);
 
-    return options.filter((option) =>
-      option.label.toLowerCase().includes(filter.toLowerCase())
-    );
+  const filteredOptions = useMemo(() => {
+    if (!filter.trim()) return options;
+
+    const searchTerm = filter.toLowerCase();
+    return options.filter((option) => {
+      const parsed = parseCliente(option.label);
+      // Busca pelo nome OU pelo documento OU pelo código
+      return (
+        parsed.nome.toLowerCase().includes(searchTerm) ||
+        parsed.documento.toLowerCase().includes(searchTerm) ||
+        parsed.codigo.toLowerCase().includes(searchTerm)
+      );
+    });
   }, [filter, options]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFilter(e.target.value);
-    setOpen(true); // abre automaticamente ao digitar
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    setFilter(newValue);
+    setOpen(true);
   };
 
   const handleOptionSelect = (selectedValue: string): void => {
     onChange(selectedValue);
-    setFilter(""); // limpa o filtro
+    setFilter("");
     setOpen(false);
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
+    // Remove classes de foco (fallback)
+    e.target.parentElement?.classList.remove(
+      "border-orange-500",
+      "ring-1",
+      "ring-orange-500"
+    );
+
+    // Se não houver valor selecionado, mantém o que foi digitado
+    if (!selected && inputValue) {
+      // Opcional: você pode querer limpar ou manter o texto
+      // setInputValue("");
+      // setFilter("");
+    }
   };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      {/* Trigger com input de texto real */}
       <PopoverTrigger asChild>
         <div
           className="
-    w-full
-    lg:w-[930px]
-    h-[28px]
-    flex items-center
-    border border-gray-300 dark:border-gray-600
-    rounded
-    px-3
-    bg-white dark:bg-slate-800
-    text-sm
-    cursor-pointer
-    text-gray-900 dark:text-gray-100
-    transition-colors duration-200
-    focus-within:border-orange-500
-    focus-within:ring-1 focus-within:ring-orange-500
-  "
+            w-full
+            lg:w-[930px]
+            h-[28px]
+            flex items-center
+            border border-gray-300 dark:border-gray-600
+            rounded
+            px-3
+            bg-white dark:bg-slate-800
+            text-sm
+            cursor-pointer
+            text-gray-900 dark:text-gray-100
+            transition-colors duration-200
+            focus-within:border-orange-500
+            focus-within:ring-1 focus-within:ring-orange-500
+          "
         >
           <input
             className="
-      flex-1
-      bg-transparent
-      outline-none
-      text-gray-900 dark:text-gray-100
-      placeholder-gray-500 dark:placeholder-gray-400
-    "
-            placeholder="Selecione..."
-            value={filter || selected?.label || ""}
+              flex-1
+              bg-transparent
+              outline-none
+              text-gray-900 dark:text-gray-100
+              placeholder-gray-500 dark:placeholder-gray-400
+            "
+            placeholder="Selecione"
+            value={inputValue}
             onChange={handleInputChange}
             onFocus={(e) => {
-              // Adiciona classes de foco para navegadores que não suportam focus-within
+              e.target.select(); // Seleciona todo o texto ao focar
               if (
                 !e.target.parentElement?.classList.contains("border-orange-500")
               ) {
@@ -125,15 +157,9 @@ export default function SelectCliente({
                   "ring-orange-500"
                 );
               }
+              setOpen(true); // Abre o dropdown ao focar
             }}
-            onBlur={(e) => {
-              // Remove classes de foco (fallback)
-              e.target.parentElement?.classList.remove(
-                "border-orange-500",
-                "ring-1",
-                "ring-orange-500"
-              );
-            }}
+            onBlur={handleInputBlur}
           />
           <Search
             className="w-4 h-4"
@@ -142,23 +168,25 @@ export default function SelectCliente({
         </div>
       </PopoverTrigger>
 
-      {/* Dropdown sem campo de busca interno */}
       <PopoverContent
         side="bottom"
         align="start"
         sideOffset={4}
         className="
           p-0 bg-white dark:bg-slate-800 border border-orange-500 shadow-xl
-          w-full                /* MOBILE: 100% */
-          sm:w-[420px]          /* TABLET: largura média */
-          md:w-[520px]          /* TABLET GRANDE */
-          lg:w-[630px]          /* DESKTOP: largura final */
+          w-full
+          sm:w-[420px]
+          md:w-[520px]
+          lg:w-[930px]
         "
+        onOpenAutoFocus={(e) => e.preventDefault()} // Previne foco automático no Command
       >
         <Command>
           <CommandList>
             <CommandEmpty className="text-gray-500 dark:text-gray-400">
-              Nenhum resultado.
+              {filter.trim()
+                ? "Nenhum cliente encontrado"
+                : "Digite para buscar..."}
             </CommandEmpty>
 
             <CommandGroup>
@@ -173,7 +201,7 @@ export default function SelectCliente({
                     className="px-4 py-2 cursor-pointer hover:bg-orange-50 dark:hover:bg-slate-700"
                   >
                     <div className="flex flex-col w-full">
-                      <span className="text-[13px] font-semibold text-black dark:text-white">
+                      <span className="text-[12px] font-semibold text-black dark:text-white">
                         {parsedCliente.nome}
                       </span>
 
