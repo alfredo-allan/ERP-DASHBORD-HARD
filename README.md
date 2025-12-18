@@ -147,8 +147,9 @@ json
 }
 }
 
-🔧 Configuração do Vite para Deploy
+# 🔧 Configuração do Vite para Deploy
 
+```text
 vite.config.ts
 typescript
 
@@ -171,6 +172,9 @@ port: 3000,
 host: true
 }
 })
+```
+
+```text
 📱 Status do Projeto (O que já entregamos)
 ✅ Concluído (Já está funcionando):
 
@@ -241,3 +245,4 @@ vercel
 
     Local: http://localhost:3000
 
+```
