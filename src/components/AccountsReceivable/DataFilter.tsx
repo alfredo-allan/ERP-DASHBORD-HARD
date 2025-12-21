@@ -220,7 +220,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
               {leftColumnFilters.map((item, i) => (
                 <div key={i} className="-mb-[-5px]">
                   <label
-                    className="block text-sm font-semibold"
+                    className="table-label-base"
                     style={{
                       color: "var(--orange-primary, #e66400)",
                     }}
@@ -240,7 +240,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
                 {rightColumnFirstRow.map((item, i) => (
                   <div key={i} className="-mb-[-5px]">
                     <label
-                      className="block text-sm font-semibold"
+                      className="table-label-base"
                       style={{
                         color: "var(--orange-primary, #e66400)",
                       }}
@@ -263,7 +263,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
                 {rightColumnSecondRow.map((item, i) => (
                   <div key={i} className="-mb-[-10px]">
                     <label
-                      className="block text-sm font-semibold"
+                      className="table-label-base"
                       style={{
                         color: "var(--orange-primary, #e66400)",
                       }}
@@ -283,7 +283,7 @@ const DataFilter: React.FC<DataFilterProps> = ({ filters, onFilterChange }) => {
 
               {/* Situação */}
               <div className="-mb-[-10px]">
-                <label className="block text-sm font-semibold text-orange-600 dark:text-orange-400">
+                <label className="table-label-base text-orange-600 dark:text-orange-400">
                   Situação
                 </label>
                 {filters[2]?.[1] && renderField(filters[2][1], 2, 1)}

@@ -53,7 +53,8 @@ export default {
         },
       },
       fontFamily: {
-        sora: ["Sora", "sans-serif"],
+        primary: ["Inter", "sans-serif"],
+        secondary: ["Poppins", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

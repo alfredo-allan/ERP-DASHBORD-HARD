@@ -312,7 +312,7 @@ const DataTable: React.FC<DataTableProps> = ({
       key: "cliente",
       label: "Cliente",
       width: "min-w-[300px]",
-      align: "text-left",
+      align: "text-center",
     },
     { key: "emp", label: "Emp", width: "min-w-[50px]", align: "text-center" },
     {
@@ -333,26 +333,26 @@ const DataTable: React.FC<DataTableProps> = ({
       key: "valor",
       label: "Valor",
       width: "min-w-[90px]",
-      align: "text-right",
+      align: "text-center",
     },
     { key: "dias", label: "Dias", width: "min-w-[60px]", align: "text-center" },
     {
       key: "multa",
       label: "Multa",
       width: "min-w-[80px]",
-      align: "text-right",
+      align: "text-center",
     },
     {
       key: "juros",
       label: "Juros",
       width: "min-w-[80px]",
-      align: "text-right",
+      align: "text-center",
     },
     {
       key: "valorTotal",
       label: "Total",
       width: "min-w-[100px]",
-      align: "text-right",
+      align: "text-center",
       isBold: true,
     },
   ];
@@ -402,31 +402,44 @@ const DataTable: React.FC<DataTableProps> = ({
             </tr>
 
             {/* Segunda linha - Cabeçalhos das colunas */}
-            <tr className="border-b border-gray-300 dark:border-slate-600 bg-[var(--orange-primary)]">
+            <tr className="table-header-row">
               {/* Checkbox seleção */}
-              <th className="w-8 px-1 py-0 h-[24px] border-r border-gray-300 dark:border-slate-600">
+              <th className="w-8 table-header-cell">
                 <input
                   type="checkbox"
                   checked={
                     selectedRows.length === data.length && data.length > 0
                   }
                   onChange={handleSelectAll}
-                  className=" text-[#6D5AEC] focus:ring-[#6D5AEC] bg-white dark:bg-slate-700"
+                  className="table-checkbox"
                 />
               </th>
 
               {/* Cabeçalhos das colunas na ORDEM CORRETA */}
-              {columns.map((column, index) => (
-                <th
-                  key={column.key}
-                  className={`px-1 py-0 h-[24px]
- text-xs font-bold text-white border-r border-gray-300 dark:border-slate-600 ${
-   column.width
- } ${column.align} ${index === columns.length - 1 ? "" : "border-r"}`}
-                >
-                  {column.label}
-                </th>
-              ))}
+              {columns.map((column, index) => {
+                // Determina qual classe de alinhamento usar
+                const alignClass =
+                  column.align === "text-left"
+                    ? "table-label-left"
+                    : column.align === "text-right"
+                    ? "table-label-right"
+                    : "table-label"; // default center
+
+                return (
+                  <th
+                    key={column.key}
+                    className={`
+          table-header-cell
+          ${alignClass}
+          text-white
+          ${column.width}
+          ${index === columns.length - 1 ? "" : "border-r"}
+        `}
+                  >
+                    {column.label}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
 
@@ -524,7 +537,7 @@ const DataTable: React.FC<DataTableProps> = ({
           rowData={modalRowData}
         >
           {/* Conteúdo detalhado da Parcela (Mantido no body do modal) */}
-         {/*  <div className="text-sm dark:text-white">
+          {/*  <div className="text-sm dark:text-white">
             <h4 className="text-lg font-bold mb-3">Dados da Linha:</h4>
             <pre className="bg-gray-100 dark:bg-slate-700 p-4 rounded-md overflow-x-auto text-xs">
               {JSON.stringify(modalRowData, null, 2)}
